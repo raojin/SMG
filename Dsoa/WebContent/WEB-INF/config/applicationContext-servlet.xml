@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<bean name="SaveFlowAction" class="dsoap.web.action.SaveFlowAction" scope="prototype"></bean>
+	<bean name="ShowFlowAction" class="dsoap.web.action.ShowFlowAction" scope="prototype"></bean>
+	<bean name="ShowFlow2Action" class="dsoap.web.action.ShowFlow2Action" scope="prototype"></bean>
+	<bean name="ViewFlow1Action" class="dsoap.web.action.ViewFlow1Action" scope="prototype"></bean>
+	<bean name="IndexAction" class="dsoap.web.action.IndexAction" scope="prototype"></bean>
+	<bean name="SelectNodeAction" class="dsoap.web.action.SelectNodeAction" scope="prototype"></bean>
+	<bean name="SelectUserAction" class="dsoap.web.action.SelectUserAction" scope="prototype"></bean>
+	<bean name="SendResultAction" class="dsoap.web.action.SendResultAction" scope="prototype"></bean>
+	<bean name="SendingAction" class="dsoap.web.action.SendingAction" scope="prototype"></bean>
+	<bean name="ReturnReasonAction" class="dsoap.web.action.ReturnReasonAction" scope="prototype"></bean>
+	<bean name="ReturnInBoxAction" class="dsoap.web.action.ReturnInBoxAction" scope="prototype"></bean>
+	<!-- 吴红亮 添加 开始-->
+	<bean name="FormStatusAction" class="dsoap.web.action.FormStatusAction" scope="prototype"></bean>
+	<bean name="BatchProcessorAction" class="dsoap.web.action.BatchProcessorAction" scope="prototype"></bean>
+	<bean name="SelectCurNodeAction" class="dsoap.web.action.SelectCurNodeAction" scope="prototype"></bean>
+	<!-- 吴红亮 添加 结束-->
+	<!-- 写入注册表Action -->
+	<bean name="RegistAction" class="dsoap.web.action.RegistAction" scope="prototype"></bean>
+	<bean name="ViewFlowAction" class="dsoap.web.action.ViewFlowAction" scope="prototype"></bean>
+	<!-- 杨龙 添加 开始-->
+	<bean name="SendTsMoreAction" class="dsoap.web.action.SendTsMoreAction" scope="prototype"></bean>
+	<bean name="GetNodeUsersAction" class="dsoap.web.action.GetNodeUsersAction" scope="prototype"></bean>	
+	<bean name="SelectNodeTsAction" class="dsoap.web.action.SelectNodeByRoleAction" scope="prototype"></bean>
+	<bean name="SendNodeTsAction" class="dsoap.web.action.SendNodeTsAction" scope="prototype"></bean>
+	<bean name="SendBatchAction" class="dsoap.web.action.SendBatchAction" scope="prototype"></bean>
+	<!-- 退回任意节点的ACTION-->
+	<bean name="ReturnNodesAction" class="dsoap.web.action.ReturnNodesAction" scope="prototype"></bean>
+	<bean name="ReturnSendAction" class="dsoap.web.action.ReturnSendAction" scope="prototype"></bean>
+	<bean name="OpinionTemplateAction" class="dsoap.web.action.OpinionTemplateAction" scope="prototype"></bean>
+	<!-- 特送发送ACTION-->
+	<bean name="SendingTsAction" class="dsoap.web.action.SendingTsAction" scope="prototype"></bean>
+	<!-- 自动发送ACTION-->
+	<bean name="AutoSendingAction" class="dsoap.web.action.AutoSendingAction" scope="prototype"></bean>
+	<!-- 补发换人ACTION-->
+	<bean name="AddSendAction" class="dsoap.web.action.AddSendAction" scope="prototype"></bean>
+	<bean name="AddSendingAction" class="dsoap.web.action.AddSendingAction" scope="prototype"></bean>
+	<!-- 杨龙 添加 结束-->
+</beans>

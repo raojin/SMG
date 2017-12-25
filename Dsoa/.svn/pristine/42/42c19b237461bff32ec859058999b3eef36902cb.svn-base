@@ -1,0 +1,188 @@
+package message;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+import xsf.data.DBManager;
+import xsf.data.DataRow;
+import xsf.data.DataTable;
+import xsf.data.Parameter;
+import xsf.data.Sql;
+
+public class SMSInterface {
+	
+	
+	public static String sendSMS1(String userId,String content,
+			String sendTime,String mobile){
+		String result = "false";
+		String account = "";
+		String pwd = "";
+		DataRow dr = getSMSAccount(userId);
+		if(dr!=null){
+			account = dr.getString("SMSACCOUNT");
+			pwd = dr.getString("SMSPWD");
+			pwd = xsf.crypto.BASE64.decode(pwd);
+		}else{
+			return "NoPWD";
+		}
+		
+		if(!isMobile(mobile)){
+			return result;
+		}
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("Account", account);
+		params.put("PWD", pwd);
+		params.put("Msg1", content);
+		params.put("Mobile1", mobile);
+		result = sendPostMessage(params, "GB2312");
+		System.out.println("-result->>" + result);
+		return result;
+	}
+	
+	/*
+	 * 通过userId得到sms用户名和密码
+	 */
+	public static DataRow getSMSAccount(String userId){
+		Sql sql = new Sql("SELECT SMSACCOUNT,SMSPWD FROM MSG_MESSAGE_USER_ACCONT WHERE USERID=?ID");
+		sql.getParameters().add(new Parameter("ID", userId));
+		DataTable dt = DBManager.getDataTable(sql);
+		if(dt!=null&&dt.getRows().size()>0){
+			return dt.getRow(0);
+		}else{
+			return null;
+		}
+	}
+	
+	/*
+	 * 判断是手机号码是否合法
+	 */
+	public static boolean isMobile(String mobiles){  
+		  
+		String regExp = "^0?(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$";  
+		  
+		Pattern p = Pattern.compile(regExp);  
+		  
+		Matcher m = p.matcher(mobiles);  
+		  
+		return m.find(); 
+		  
+	} 
+	
+	
+	/*
+	   * params 填写的URL的参数 encode 字节编码
+	   */
+	  public static String sendPostMessage(Map<String, String> params,
+	      String encode) {
+		
+	    StringBuffer stringBuffer = new StringBuffer();
+	    String result ="";
+	    if (params != null && !params.isEmpty()) {
+	      for (Map.Entry<String, String> entry : params.entrySet()) {
+	        try {
+	          stringBuffer
+	              .append(entry.getKey())
+	              .append("=")
+	              .append(URLEncoder.encode(entry.getValue(), encode))
+	              .append("&");
+
+	        } catch (UnsupportedEncodingException e) {
+	   
+	          e.printStackTrace();
+	          return "false";
+	        }
+	      }
+	      // 删掉最后一个 & 字符
+	      stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+	      System.out.println("-->>" + stringBuffer.toString());
+	      URL url;
+	      HttpURLConnection httpURLConnection = null;
+	      try {
+	    	 
+				url = new URL("http://210.76.64.248/oasms/SMInterface.asp");
+	        httpURLConnection = (HttpURLConnection) url
+	            .openConnection();
+	        httpURLConnection.setConnectTimeout(3000);
+	        httpURLConnection.setDoInput(true);// 从服务器获取数据
+	        httpURLConnection.setDoOutput(true);// 向服务器写入数据
+
+	        // 获得上传信息的字节大小及长度
+	        byte[] mydata = stringBuffer.toString().getBytes();
+	        // 设置请求体的类型
+	        httpURLConnection.setRequestProperty("Content-Type",
+	            "application/x-www-form-urlencoded");
+	        httpURLConnection.setRequestProperty("Content-Lenth",
+	            String.valueOf(mydata.length));
+
+	        // 获得输出流，向服务器输出数据
+	        OutputStream outputStream = (OutputStream) httpURLConnection
+	            .getOutputStream();
+	        outputStream.write(mydata);
+
+	        // 获得服务器响应的结果和状态码
+	        int responseCode = httpURLConnection.getResponseCode();
+	        if (responseCode == 200) {
+
+	          // 获得输入流，从服务器端获得数据
+	          InputStream inputStream = (InputStream) httpURLConnection
+	              .getInputStream();
+	          result = changeInputStream(inputStream, encode);
+
+	        }
+
+	      } catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	        result = "false";
+	      }finally{
+	    	  if(httpURLConnection!=null){
+	    		  httpURLConnection.disconnect();
+	    	  }
+	      }
+	    }
+
+	    return result;
+	  }
+	
+	
+	/*
+	   * // 把从输入流InputStream按指定编码格式encode变成字符串String
+	   */
+	  public static String changeInputStream(InputStream inputStream,
+	      String encode) {
+
+	    // ByteArrayOutputStream 一般叫做内存流
+	    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+	    byte[] data = new byte[1024];
+	    int len = 0;
+	    String result = "";
+	    if (inputStream != null) {
+
+	      try {
+	        while ((len = inputStream.read(data)) != -1) {
+	          byteArrayOutputStream.write(data, 0, len);
+
+	        }
+	        result = new String(byteArrayOutputStream.toByteArray(), encode);
+
+	      } catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	      }
+
+	    }
+
+	    return result;
+	  }
+}

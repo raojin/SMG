@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WFKEY>
+<Node>
+<KEY>用户ID</KEY>
+<Value>[USERID]</Value>
+</Node>
+<Node>
+<KEY>文件ID</KEY>
+<Value>[INFO_ID]</Value>
+</Node>
+<Node>
+<KEY>用户部门ID</KEY>
+<Value>[DEPT_ID]</Value>
+</Node>
+<Node>
+<KEY>流程ID</KEY>
+<Value>[PID]</Value>
+</Node>
+<Node>
+<KEY>流程节点ID</KEY>
+<Value>[PNID]</Value>
+</Node>
+</WFKEY>

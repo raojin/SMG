@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE weblogic-web-app PUBLIC "-//BEA Systems, Inc.//DTD Web Application 8.1//EN" "http://www.bea.com/servers/wls810/dtd/weblogic810-web-jar.dtd">
+<weblogic-web-app>
+	<session-descriptor>
+       <session-param>
+         	<param-name>
+           	CookieName
+         	</param-name>
+         	<param-value>
+           	JSESSIONID2
+         	</param-value>
+       	</session-param>
+       	<session-param>
+      		<param-name>TimeoutSecs</param-name>
+      		<param-value>3600</param-value>
+		</session-param>
+       
+     </session-descriptor>
+  <container-descriptor>
+  <servlet-reload-check-secs>-1</servlet-reload-check-secs> 
+  </container-descriptor>
+  <context-root>ds_Flow</context-root>
+
+</weblogic-web-app>

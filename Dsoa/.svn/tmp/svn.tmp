@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Resouce>
+	<Settings Name="系统配置信息">
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 平台 -->
+		<Add Key="ApplicationName" Value="流程" />
+		<Add Key="ColumnUpCase" Value="true" /><!--查询字段大写-->
+		<Add Key="Cache" Value="false" />
+		<Add Key="Debug" Value="true" />
+		<Add Key="ConnectionKey" Value="ezweb" />
+		<Add Key="Logger" Value="xsf.log.impl.ConsoleLogger" /> 
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 应用 -->
+		<Add Key="SOA_MACHINE" Value="/nbsgd" />
+		<Add Key="FLOW_MACHINE" Value="/Dsoa" />
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 流程 -->
+		<Add Key="showSearch" Value="true" /><!-- 选人时是否提供查找功能 -->
+		<Add Key="showClose" Value="true" /><!-- 选人时是否显示关闭按钮 -->
+		<Add Key="cascade" Value="true" /><!--  选人时是否支持级联选择 -->
+		<Add Key="showCountdown" Value="false" /><!-- 发送完是否显示倒计时 -->
+		<Add Key="closeMode" Value="1" /><!-- 发送完关窗口模式（0:页面切换；1：关闭子窗口，刷新父窗口） -->
+		<Add Key="isFilterPerson" Value="false" /><!-- 是否过滤正在处理的人 -->
+		<Add Key="isCrossDept" Value="true" /><!-- 跨部门兼职（g_infos 拟稿部门）过滤部门 -->
+		<Add Key="isRoleDept" Value="true" /><!-- （角色与部门关联）过滤人员 -->
+		<Add Key="isStandaloneDept" Value="true" /><!-- 是否支持 “子机构” -->
+		<Add Key="isPrivateGroup" Value="true" /><!--  是否支持 “私有群组” -->
+		<Add Key="isSqlUserShowDept" Value="false" /><!-- sql选人时是否显示“部门” -->
+		<Add Key="isDraftOpinion" Value="true" /><!-- 是否支持拟稿写意见 -->
+		<Add Key="JoinOrder" Value="1" /><!-- 汇总顺序（0：在最后一个人处理时汇合；1：在第一个人处理时汇合，其他人跟随第一个人发） -->
+		<Add Key="removeAble" Value="false" /><!-- 强制发送时是否可取消选择 -->
+		<Add Key="timeStandard" Value="1" /><!-- 新增，更新的时间标准(1应用服务器，0数据库服务器) -->
+							
+		<Add Key="SYS_SQL_VERSION" Value="1" /><!--数据源版本 0:G_USERS（Dsoa/WEB-INF/config/SYS_SQL_0.xml） 1:G_USERINFO（Dsoa/WEB-INF/config/SYS_SQL_1.xml）2:支持部门中使用小组 -->
+		<Add Key="COUNT_DOWN_TIME" Value="3"/><!-- 发送结果页面倒计时秒数 -->
+		<Add Key="PORTAL_OA_URL" Value="http://ip:port"/><!-- 门户地址(财政厅特有) -->
+		<Add Key="GroupView" Value="0" /><!-- 是否显示小组1是 -->
+		<Add Key="WorkStartTime" Value="8:30" /><!--上班时间 -->
+		<Add Key="WorkEndTime" Value="17:30" /><!--下班时间-->
+		<Add Key="LocalNodeName" Value="GS.TJJ.COM.CN" /><!-- 本地节点名称 -->
+		<Add Key="分级保护版本" Value="0" /><!-- 默认0 -->
+		<Add Key="消息服务器地址" Value="http://ip:port/xxx"/><!-- 消息服务地址 -->
+		<Add Key="退回汇总前所有人" Value="0" /><!-- 1是 -->
+		<Add Key="唯一可选人员时自动发送" Value="0" /><!-- 1是 -->
+		<Add Key="是否使用人员密级" Value="0" /><!-- 1是,0否 -->
+		<Add Key="SelectUserMode" Value="0" /><!-- 流程选人模式（0:先选节点后选人；1：不选节点直接选人） -->
+		<Add Key="openInfoMJ" Value="true" /><!-- 是否启用文件密级） -->
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 其它 -->
+	</Settings>
+	<CacheSetting>
+		<Add Key="ProviderClass" Value="xsf.cache.provider.hashtableCache.HashtableCacheProvider" />
+	</CacheSetting>
+	<ConnectionSettings>
+		<Settings Id="ezweb">
+				<Add Key="DIALECT" Value="Oracle" />
+				<Add Key="CONNECTION_PROVIDER" Value="xsf.data.connection.DriverManagerConnectionProvider" />
+	  			<Add Key="URL" Value="jdbc:oracle:thin:@172.27.61.189:1521:orcl" />
+	  			<Add Key="user" Value="smg_new" />
+	  			<Add Key="password" Value="111111" />
+	  			<Add Key="AUTOCOMMIT" Value="false" />
+				<Add Key="DRIVER" Value="oracle.jdbc.OracleDriver" />
+		</Settings>
+	</ConnectionSettings>
+</Resouce>

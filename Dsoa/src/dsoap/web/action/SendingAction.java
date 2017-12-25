@@ -1,0 +1,268 @@
+package dsoap.web.action;
+
+import java.net.URLDecoder;
+import java.util.List;
+
+
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
+
+
+import xsf.data.DBManager;
+import dsoap.dsflow.DS_FLOWClass;
+import dsoap.log.SystemLog;
+import dsoap.tools.webwork.Action;
+
+/**
+ * 
+ * @author liuzhq ps:类逻辑有任何疑问请找.net的原始开发人员。
+ */
+public class SendingAction extends Action {
+    private static final long serialVersionUID = 4516271888926684193L;
+
+    public String errStr = "";
+    private DS_FLOWClass dsFlow;
+
+    @Override
+    public String execute() throws Exception {
+        super.execute();
+        // ---吴红亮 添加 开始
+        boolean isEnd = false;
+        //杨龙修改根据业务系统发送的流程参数 初始化流程 2013-1-13 开始
+        if (request.getParameter("flowParms") != null) {
+            String FlowParms = URLDecoder.decode(request.getParameter("flowParms"), "utf-8");
+            //设置选中的发送用户列表中的节点为选中节点 ,此处只解析选一个人的情况，多人发送需修改该方法
+            String sustr = URLDecoder.decode(request.getParameter("UList"), "utf-8");;// 用户列表 （SelectUser.jsp 提交格式【:节点ID:用户ID:流程节点名:部门名:用户名（部门名）:部门ID】多个时以“;”分割）
+            String strNextNodeIDs="";
+            String[] users=sustr.split(";");
+            for (int i = 0; i < users.length; i++) {
+            	String[] user=users[i].split(":");
+            	if(user.length>5)
+            	{
+            		strNextNodeIDs+=user[1]+",";
+            	}
+			}
+            if(!"".equals(strNextNodeIDs))
+            {
+            	strNextNodeIDs=strNextNodeIDs.substring(0, strNextNodeIDs.length()-1);
+            }
+            Document parmsXml = DocumentHelper.parseText(FlowParms);
+            List listNodes= parmsXml.selectNodes("/Root/Flow");
+            Element elt=(Element)listNodes.get(0);
+            Element eltNextNode=elt.addElement("nextNodeIDs");
+            eltNextNode.setText(strNextNodeIDs);
+            dsFlow = new DS_FLOWClass(parmsXml.asXML());
+            session.put("DSFLOW", dsFlow);
+            String[] nodeIDs=strNextNodeIDs.split(",");
+            for (int i = 0; i < nodeIDs.length; i++) {
+            	dsFlow.setSelectNodeID(Long.parseLong(nodeIDs[i]));
+			}
+            
+        }
+      //杨龙修改根据业务系统发送的流程参数 初始化流程 2013-1-13 结束
+        // ---吴红亮 添加 结束
+        if (session.get("DSFLOW") == null) {
+            errStr = "<script language='javascript'>alert('流程信息错误！');top.window.close();</script>";
+            return ERROR;
+        }
+        DS_FLOWClass dsFlow = (DS_FLOWClass) session.get("DSFLOW");
+        try {
+            String sustr = request.getParameter("UList");// 用户列表 （SelectUser.jsp 提交格式【:节点ID:用户ID:流程节点名:部门名:用户名（部门名）:部门ID】多个时以“;”分割）
+            String sSendMethod = request.getParameter("SendMethod");// 发送方式 （SelectUserAction 中设置的格式【节点ID:发送方式】多个时以“,”分割）
+            String sNodeDate = request.getParameter("txtNode");// （SelectUser.jsp 提交）
+            dsFlow.strPriSend = "," + request.getParameter("TxtPriSend");
+            String SMS = request.getParameter("SMSContent");
+          
+            String isSendMsg = request.getParameter("isSendSMS");
+            String isSendmail = request.getParameter("isSendMAIL");
+            String isSendOther = request.getParameter("isSendTRAY");
+           // String isSendTuoPan = request.getParameter("isSendTUOPANV");
+            
+            
+            if("true".equals(isSendMsg)){
+            	dsFlow.isForword = true;
+            }else{
+            	dsFlow.isForword = false;
+            }
+            
+            if("true".equals(isSendmail)){
+            	dsFlow.isEMail = true;
+            }else{
+            	dsFlow.isEMail = false;
+            }
+            
+            if("true".equals(isSendOther)){
+            	dsFlow.isTray = true;
+            }else{
+            	dsFlow.isTray = false;
+            }
+            
+//            if("true".equals(isSendTuoPan)){
+//            	dsFlow.isTuoPan = true;
+//            }else{
+//            	dsFlow.isTuoPan = false;
+//            }
+            
+            String strUserIp = request.getServerName();
+            // ------------------------------------------------------------------------
+            dsFlow.strIP = strUserIp;
+            dsFlow.strMAC = SystemLog.GetNetCardAddress(strUserIp);
+            dsFlow.sSmsContent = SMS;
+            // ---吴红亮 添加 开始
+            String sendMethod = processSendMethod(dsFlow.NextNodeInfoXml, sSendMethod, sustr);
+            if (!sSendMethod.equals(sendMethod)) {
+                int index = sendMethod.indexOf("$");
+                sSendMethod = sendMethod.substring(0, index);
+                sustr = sendMethod.substring(index + 1, sendMethod.length());
+                isEnd = true;
+            }
+            // ---吴红亮 添加 结束
+            String _cmdStr = "";
+            _cmdStr = "SELECT BT FROM G_INFOS WHERE ID=" + dsFlow.iInfoID;
+            xsf.data.DataTable dt = DBManager.getDataTable(_cmdStr);
+            if (dt.getRows().size() > 0) {
+                dsFlow.strBT = dt.getRows().get(0).getString("BT");
+            }
+            if (!"".equals(sustr)) {
+                if (dsFlow.iSendType >= 10) {
+                    dsFlow.ds_ParentFlow.setSendInfo(sustr, sSendMethod, sNodeDate);
+                    // // 短信
+                    // dsFlow.ds_ParentFlow.sSmsContent=
+                    // request.getParameter("SMSContent");
+                    // //Server.UrlDecode(this.Request.Params["SMSContent"]);
+                    // dsFlow.ds_ParentFlow.isSendSMS=("true".equals(request.getParameter("isSendSMS")));
+                    // //(this.Request.Params["isSendSMS"]=="true");
+                    // dsFlow.ds_ParentFlow.isSendEmail=("true".equals(request.getParameter("isSendMAIL")));
+                    // //(this.Request.Params["isSendMAIL"]=="true");
+                    // dsFlow.ds_ParentFlow.isSendTray=("true".equals(request.getParameter("isSendTRAY")));
+                    // //(this.Request.Params["isSendTRAY"]=="true");
+                    // 是否隐藏意见
+                    dsFlow.ds_ParentFlow.isHideYJ = ("true".equals(request.getParameter("isHideYJ"))) ? 1 : 0;
+                    // (this.Request.Params["isHideYJ"]=="true")?1:0;
+                    dsFlow.ds_ParentFlow.send();
+                    // 结办
+                    // dsFlow.sendToEnd();
+                } else {
+                    dsFlow.setSendInfo(sustr, sSendMethod, sNodeDate);
+                    // 短信
+                    // dsFlow.sSmsContent=
+                    // request.getParameter("SMSContent");
+                    // //Server.UrlDecode(this.Request.Params["SMSContent"]);
+                    // dsFlow.isSendSMS=("true".equals(request.getParameter("isSendSMS")));
+                    // //(this.Request.Params["isSendSMS"]=="true");
+                    // dsFlow.isSendEmail=("true".equals(request.getParameter("isSendMAIL")));
+                    // //(this.Request.Params["isSendMAIL"]=="true");
+                    // dsFlow.isSendTray=("true".equals(request.getParameter("isSendTRAY")));
+                    // //(this.Request.Params["isSendTRAY"]=="true");
+                    // 是否隐藏意见
+                    dsFlow.isHideYJ = (("true".equals("false")) ? 1 : 0);
+                    // (this.Request.Params["isHideYJ"]=="true")?1:0;
+                    try {
+                        synchronized (DS_FLOWClass.lock) {
+                            // System.out.println("一般LOCK:--------------------------------" + DS_FLOWClass.lock);
+                            if (dsFlow.isExist()) {
+                                dsFlow.send();
+                            } else {
+                                request.setAttribute("msg", "该文件已被处理!");
+                                return "SendBack";
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //86为抄送未选择主送节点错误，如果是拟稿此处将PID重置为0
+                        if ("86".equals(e.getMessage().trim())){
+                        	dsFlow.iErrorCode=0;
+                        	dsFlow.sErrorMessage="";
+                        	if(dsFlow.iPnID==1)
+                        	{
+                        		dsFlow.iPID=0;
+                        		dsFlow.iPnID=0;
+                        	}
+                        	errStr = "<script language='javascript'>alert('请增加主送节点.');location.href='SelectUser.action';</script>";
+                        	return ERROR;
+                        }
+                        request.setAttribute("msg", e.toString());
+                        return "SendBack";
+                        // throw e;
+                    }
+                }
+            }
+            // ---吴红亮 添加 开始
+            if (isEnd) {
+                setEndAble(dsFlow.NextNodeInfoXml);
+                dsFlow.iSendType = 9;
+                return "index";
+            }
+            // ---吴红亮 添加 结束
+            return SUCCESS;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (dsFlow.iSendType >= 10) {
+                if (dsFlow.ds_ParentFlow.iErrorCode == 25) {
+                    dsFlow.ds_ParentFlow.iErrorCode = 0;
+                    errStr = "<script language='javascript'>alert('当前选择的人员数量为零，请重新选择');//location.href='Selectuser.aspx';</script>";
+                    return ERROR;
+                } else {
+                    errStr = dsFlow.sErrorMessage;
+                    return ERROR;
+                }
+            } else {
+                if (dsFlow.iErrorCode == 25) {
+                    dsFlow.iErrorCode = 0;
+                    errStr = "<script language='javascript'>alert('当前选择的人员数量为零，请重新选择');//location.href='Selectuser.aspx';</script>";
+                    return ERROR;
+                }else  {
+                    errStr = dsFlow.sErrorMessage;
+                    return ERROR;
+                }
+            }
+        }
+    }
+
+    private String processSendMethod(Document nextNodeInfoXml, String sendMethod, String users) {
+        // System.out.println(nextNodeInfoXml.asXML());
+        for (Object obj : nextNodeInfoXml.selectNodes("Nodes/Node")) {
+            Node nextWorkFlowNode = (Node) obj;
+            if ("0".equals(nextWorkFlowNode.valueOf("@Enabled"))) {
+                continue;
+            }
+            String sID = nextWorkFlowNode.valueOf("@ID");
+            String sNodeType = nextWorkFlowNode.valueOf("@NodeType");
+            String test = "," + sID + ":";
+            String test1 = ":" + sID + ":";
+            if ("0".equals(sNodeType) && sendMethod.indexOf(test) > -1) {// 办结节点
+                nextWorkFlowNode.selectSingleNode("@Enabled").setText("0");
+                String[] temp = sendMethod.split(test);
+                String tail = "";
+                if (temp[1].indexOf(",") > -1) {
+                    tail = temp[1].substring(temp[1].indexOf(","));
+                }
+                sendMethod = temp[0] + tail;
+                temp = users.split(";");
+                users = "";
+                for (String u : temp) {
+                    if (!u.startsWith(test1) && !"".equals(u)) {
+                        users += ";" + u;
+                    }
+                }
+                sendMethod += "$" + users;
+                break;
+            }
+        }
+        return sendMethod;
+    }
+
+    private void setEndAble(Document nextNodeInfoXml) {
+        for (Object obj : nextNodeInfoXml.selectNodes("Nodes/Node")) {
+            Node nextWorkFlowNode = (Node) obj;
+            if ("0".equals(nextWorkFlowNode.valueOf("@NodeType"))) {// 办结节点
+                nextWorkFlowNode.selectSingleNode("@Enabled").setText("1");
+            } else {
+                nextWorkFlowNode.selectSingleNode("@Enabled").setText("0");
+            }
+        }
+    }
+
+}

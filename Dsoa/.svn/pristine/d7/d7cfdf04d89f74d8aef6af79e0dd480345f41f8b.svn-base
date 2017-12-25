@@ -1,0 +1,56 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<style type="text/css">
+.user_tree_btn0 {
+	margin-top: 30px;
+	color: white;
+	width: 63px;
+	height: 31px;
+	line-height: 31px;
+	background: url(../images/but04.gif) no-repeat;
+	cursor: pointer;
+	border: 0px solid #ff0000;
+}
+</style>
+	</head>
+	<body background="../images/bg_body_right.gif"
+		style="border: 0px solid #0000ff; margin: 0px;">
+		<% System.out.println("aaa"); %>
+		<form id="backDlg"
+			style="border: 0px solid #00ff00; padding-top: 15px; font-size: 12px; padding-left: 15px;">
+			<div style="width: 100%; font-size: 14px;">
+				<b>${exception.message}</b>
+			</div>
+			<center>
+				<div id="BtnClose" class="user_tree_btn0"
+					onclick='javascript:top.window.sendFormWin.hide();'>
+					确 定
+				</div>
+			</center>
+		</form>
+	</body>
+	<script language="javascript">
+	window.onload = function(){
+		try{
+			var win = top.window.sendFormWin;
+			win.setTitle("错误信息");
+			var c = document.getElementById("backDlg");
+			var h = c.clientHeight>c.scrollHeight?c.clientHeight:c.scrollHeight;
+			
+			/**
+			win.element.dialog('option', 'height', h+85);
+			win.element.dialog('option', 'width', 400);
+			win.element.dialog('option', 'position', "center");
+			win.setWH();
+			*/
+			win.setWH({
+				height:h+85,
+				width:400
+			});
+			
+		}catch(e){}
+	}
+</script>
+</html>

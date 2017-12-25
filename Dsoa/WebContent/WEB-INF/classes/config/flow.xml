@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd" >
+<struts>
+	<package name="flow" extends="struts-default" namespace="/ds_Flow">
+		<result-types>
+			<result-type name="string" class="dsoap.tools.webwork.StringResultType">
+				<param name="contentTypeName">text/html; charset=UTF-8</param>
+                <param name="stringName">errStr</param>
+			</result-type>
+		</result-types>
+	
+		<global-results>
+			<result name="exception">/error.jsp</result>
+		</global-results>
+
+		<global-exception-mappings>
+			<exception-mapping exception="java.lang.Exception" result="exception" />
+		</global-exception-mappings>
+		
+		<action name="SaveFlow" class="SaveFlowAction">
+			<result name="success">SaveFlow.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		
+		<action name="ShowFlow" class="ShowFlowAction">
+			<result name="success">ShowFlow.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		
+		<!-- 写入注册表Action -->
+		<action name="Regist" class="RegistAction">
+			<result name="success">start.htm</result>
+			<result name="error" type="string"></result>
+		</action>
+		
+		<action name="ShowFlow2" class="ShowFlow2Action">
+			<result name="success">ShowFlow2.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		
+		<!-- 吴红亮 添加 开始-->
+		<action name="FormStatus" class="FormStatusAction">
+			<result name="success">formStatus.jsp</result>
+			<result name="success1">formStatus2.jsp</result>
+			<result name="success2">formStatus3.jsp</result>
+			<result name="success3">formStatus4.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		<action name="BatchProcessor" class="BatchProcessorAction">
+			<result name="success">batchProcessor.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		<!-- 吴红亮 添加 结束-->
+		
+		<action name="ViewFlow1" class="ViewFlow1Action">
+			<result name="success">ViewFlow1.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		
+		<action name="ViewFlow" class="ViewFlowAction">
+			<result name="success">ViewFlow.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		
+		<action name="Index" class="IndexAction">
+			<result name="error" type="string"></result>
+			<result name="SelectNode" type="redirect">SelectNode.action</result>
+            <result name="SelectUser" type="redirect">SelectUser.action</result>
+            <result name="SendToContinue" type="redirect">SendToContinue.action</result>
+            <result name="SelectCurNode" type="redirect">SelectCurNode.action</result>
+            <!-- result name="SendToEnd" type="redirect">SendToEnd.action</result -->
+            <result name="SendResult" type="redirect">SendResult.action</result>
+            <!-- 吴红亮 添加 开始-->
+            <result name="SendToEnd">sendToEnd.jsp</result>
+            <!-- 吴红亮 添加 结束-->
+		</action>
+		
+		<action name="SelectNode" class="SelectNodeAction">
+			<result name="success">SelectNode.jsp</result>
+			<result name="index" type="redirect">Index.action</result>
+			<result name="error" type="string"></result>
+		</action>
+		
+		<action name="SelectUser" class="SelectUserAction">
+			<result name="success">SelectUser.jsp</result>
+			<result name="error" type="string"></result>
+			<result name="fork">fork.jsp</result>
+			<result name="addsend">AddSendUser.jsp</result>
+		</action>
+		
+		<action name="Sending" class="SendingAction">
+			<result name="success" type="redirect">SendResult.action</result>
+			<result name="error" type="string"></result>
+			<!-- 吴红亮 添加 开始-->
+			<result name="index" type="redirect">Index.action</result>
+			<result name="SendBack">back.jsp</result>
+			<!-- 吴红亮 添加 结束-->
+		</action>
+		
+		<action name="SendResult" class="SendResultAction">
+			<result name="success">SendResult.jsp</result>
+			<result name="zf">zf.jsp</result>
+		</action>
+		
+		<action name="ReturnReason" class="ReturnReasonAction">
+			<result name="success">ReturnReason.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		
+		<action name="ReturnInBox"  class="ReturnInBoxAction">
+			<result name="success">ReturnReason.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		
+		<action name="SelectCurNode" class="SelectCurNodeAction">
+			<result name="SelectNode">SelectCurNode.jsp</result>
+			<result name="SelectUser" type="redirect">SelectUser.action</result>
+			<result name="SendResult" type="redirect">SendResult.action</result>
+			<result name="endErr">endErr.jsp</result>
+		</action>
+		<!-- 杨龙添加 -->
+		<action name="OpinionTemplateList" method="GetAll"  class="OpinionTemplateAction">
+			<result name="success" type="">
+				<param name="root">templateList</param>
+				<param name="noCache">true</param>
+				<param name="ignoreHierarchy">false</param>
+				<param name="contentType">text/html</param>
+			</result>
+		</action>
+		<action name="ReturnNodesShow"   class="ReturnNodesAction">
+			<result name="success">ReturnNodes.jsp</result>
+			<result name="error" type="string"></result>
+		</action>
+		<action name="ReturnNodesSend"  class="ReturnSendAction">
+			<result name="success" type="redirect">SendResult.action</result>
+			<result name="error" type="string"></result>
+		</action>
+		<action name="SendTsMore"  class="SendTsMoreAction">
+			<result name="RESULT">ResultTs.jsp</result>
+		</action>
+		<action name="GetNodeUsers"  class="GetNodeUsersAction">
+			<result name="RESULT">ResultTs.jsp</result>
+		</action>
+		<action name="SelectNodeTs"  class="SelectNodeTsAction">
+			<result name="SELECTNODE">SelectNodeTs.jsp</result>
+			<result name="RESULT">ResultTs.jsp</result>
+		</action>
+		<action name="SendBatch"  class="SendBatchAction">
+				<result name="success" type="redirect">SendResult.action</result>
+			<result name="error" type="string"></result>
+			<!-- 吴红亮 添加 开始-->
+			<result name="index" type="redirect">Index.action</result>
+			<!-- 批量发送结果返回batchBack。jsp 替换back.jsp lvxd 20140225 -->
+			<result name="SendBack">batchBack.jsp</result>
+			<!-- 吴红亮 添加 结束-->
+		</action>
+		<!-- 杨龙添加特送发送 -->
+		<action name="SendingTS" class="SendingTsAction">
+			<result name="success" type="redirect">SendResult.action</result>
+			<result name="error" type="string"></result>
+			<!-- 吴红亮 添加 开始-->
+			<result name="index" type="redirect">Index.action</result>
+			<result name="SendBack">back.jsp</result>
+			<!-- 吴红亮 添加 结束-->
+		</action>
+		<!-- 杨龙添加自动发送 -->
+		<action name="AutoSending" class="AutoSendingAction">
+			<result name="success" type="string"></result>
+			<result name="error" type="string"></result>
+		</action>
+		<!-- 补发换人初始化流程 -->
+		<action name="AddSend" class="AddSendAction">
+			<result name="error" type="string"></result>
+			<result name="SelectNode" type="redirect">SelectNode.action</result>
+            <result name="SelectUser" type="redirect">SelectUser.action</result>
+            <result name="SendToContinue" type="redirect">SendToContinue.action</result>
+            <result name="SelectCurNode" type="redirect">SelectCurNode.action</result>
+            <!-- result name="SendToEnd" type="redirect">SendToEnd.action</result -->
+            <result name="SendResult" type="redirect">SendResult.action</result>
+            <result name="SendToEnd">sendToEnd.jsp</result>
+		</action>
+		<action name="AddSending" class="AddSendingAction">
+			<result name="success" type="redirect">SendResult.action</result>
+			<result name="error" type="string">endErr.jsp</result>
+			<result name="SendBack">back.jsp</result>
+		</action>
+	</package>
+	<!-- 杨龙添加 -->
+	<package name="flow_json" extends="json-default" namespace="/FlowJson">
+      <action name="OpinionTemplateList" method="GetAll"  class="OpinionTemplateAction">
+			<result type="json">
+			</result>
+		</action>   
+		<action name="OpinionTemplateAdd" method="Add"  class="OpinionTemplateAction">
+			<result type="json">
+			</result>
+		</action>     
+		<action name="OpinionTemplateDel" method="Del"  class="OpinionTemplateAction">
+			<result type="json">
+			</result>
+		</action>              
+	</package> 
+</struts>

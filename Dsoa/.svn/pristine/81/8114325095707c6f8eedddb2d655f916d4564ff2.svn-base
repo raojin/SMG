@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<message title="标题"
+	         sendTime="2013-09-06 14:32:30"
+		     urgent="3"
+			 finishType="2"
+			 finishTime="2013-09-05 22:22:30"
+			 url="链接" infoId="aaa">
+			 <senders>
+				<sender id="11">
+				<mail>545014805@qq.com</mail>
+				<sample/>
+			</sender>
+
+			<sender id="12">
+				<mail>545014805@qq.com</mail>
+				<sample/>
+			</sender>	
+			 </senders>
+			<body><![CDATA[测试信息。。。。。。。]]></body>
+	</message>
+	
+	<message title="标题2"
+	         sendTime="2013-09-06 14:32:30"
+		     urgent="3"
+			 finishType="2"
+			 finishTime="2013-09-05 22:22:30"
+			 url="链接" infoId="aaa">
+			 <senders>
+				<sender id="11">
+				<mail>545014805@qq.com</mail>
+				<sample/>
+			</sender>
+
+			<sender id="12">
+				<mail>545014805@qq.com</mail>
+				<sample/>
+			</sender>	
+			 </senders>
+			<body><![CDATA[测试信息。。。。。。。]]></body>
+	</message>
+</root>

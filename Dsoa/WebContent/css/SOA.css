@@ -1,0 +1,122 @@
+
+/****************** SelectUser *********************************/
+.select_user_tree {
+	border: 1px solid #DFDFDF;
+	padding-top: 10px;
+	text-align: left;
+	overflow-y: auto;
+	overflow-x: auto;
+	scrollbar-face-color: #d9d9d9;
+	scrollbar-arrow-color: #ffffff;
+	scrollbar-highlight-color: #ffffff;
+	scrollbar-3dlight-color: #d9d9d9;
+	scrollbar-shadow-color: #ffffff;
+	scrollbar-darkshadow-color: #d9d9d9;
+	scrollbar-track-color: #ffffff;
+}
+.tree_node {
+	margin-left:18px;
+}
+.tree_node_1 {
+	border:0px solid #ff0000;
+	margin-left:-10px;
+	white-space:nowrap;
+}
+.tree_node_2 {
+	border-left:1px dotted #999999;
+	white-space:nowrap;
+}
+.tree_node_3 {
+	border-left:0px dotted #999999;
+	white-space:nowrap;
+}
+.tree_node_4 {
+	border-left:0px dotted #999999;
+	white-space:nowrap;
+	background: url(../js/jquery/themes/default/lastli1.gif) no-repeat;
+}
+.tree_node_img_u_1{
+	padding:2px 0px 2px 0px;
+	background: url(../js/jquery/themes/default/li.gif) no-repeat center;
+	width:8px;
+	display: inline-block;
+}
+.tree_node_img{
+	width:20px;
+	height:18px;
+	display: inline-block;
+	vertical-align:bottom;
+}
+.tree_node_img_d_1{
+	padding:0px 5px 0px 5px;
+	background: url(../js/jquery/themes/classic/minus.gif) no-repeat center;
+	width:20px;
+	cursor: pointer;
+}
+.tree_node_img_d_2{
+	padding:0px 5px 0px 5px;
+	background: url(../js/jquery/themes/classic/plus.gif) no-repeat center;
+	width:20px;
+	cursor: pointer;
+}
+.select_user_send {
+	border: 0px solid #ff0000;
+	margin-right: 4px;
+	width: 63px;
+	height: 31px;
+	line-height: 31px;
+	font-size:14px;
+	color: white;
+	text-align: center;
+	cursor: pointer;
+	background: url(../images/button2_ext.gif) no-repeat;
+}
+
+.select_user_reselect {
+	border: 0px solid #ff0000;
+	margin-left: 4px;
+	width: 63px;
+	height: 31px;
+	line-height: 31px;
+	font-size:14px;
+	color: black;
+	text-align: center;
+	cursor: pointer;
+	background: url(../images/button2.gif) no-repeat;
+}
+.user_tree_search {
+	width: 150px;
+	margin: 2px;
+	border: 0;
+}
+.user_tree_text {
+	width: 40px;
+	color: white;
+	text-align: center;
+	cursor: pointer;
+}
+/****************** SelectNode *********************************/
+.select_node_cancel {
+	border: 0px solid #ff0000;
+	width: 63px;
+	height: 31px;
+	line-height: 31px;
+	margin: 2px;
+	font-size:14px;
+	color: black;
+	text-align: center;
+	cursor: pointer;
+	background: url(../images/button2.gif) no-repeat;
+}
+/****************** SendResult sendToEnd *********************************/
+.send_close {
+	border: 0px solid #ff0000;
+	width: 63px;
+	height: 31px;
+	line-height: 31px;
+	margin-top: 30px;
+	font-size:14px;
+	color: white;
+	cursor: pointer;
+	background: url(../images/button2_ext.gif) no-repeat;
+}

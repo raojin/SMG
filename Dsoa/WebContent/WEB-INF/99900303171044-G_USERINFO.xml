@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DataSource>
+    <SelectCommands>
+        <SQL ID="getTop5Items" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+select * from (
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    A.USER_ID USER_ID1,D.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_USERINFO D on A.USER_ID=D.ID and A.UTYPE in(0,9)
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where A.USER_ID=?USER and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+     union 
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    D.USERID USER_ID1,G.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_PRIVILEGE D on A.USER_ID=D.ROLEID and A.UTYPE=3 and A.DEPT_ID=D.ORGID 
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_USERINFO G on D.USERID=G.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where D.USERID=?ROLE and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+) order by RDATE desc 
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER" Type="Other"/>
+                 <Parameter Name="ROLE" Type="Other"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="getAllFileTop5Items" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+select * from (
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    A.USER_ID USER_ID1,D.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_USERINFO D on A.USER_ID=D.ID and A.UTYPE in(0,9)
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where A.USER_ID=?USER and B.ROWSTATE>=0 
+     union 
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    D.USERID USER_ID1,G.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_PRIVILEGE D on A.USER_ID=D.ROLEID and A.UTYPE=3 and A.DEPT_ID=D.ORGID 
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_USERINFO G on D.USERID=G.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where D.USERID=?ROLE and B.ROWSTATE>=0
+) order by RDATE desc 
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER" Type="Other"/>
+                 <Parameter Name="ROLE" Type="Other"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="getTop5DocsItems" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+select * from (
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    A.USER_ID USER_ID1,D.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_USERINFO D on A.USER_ID=D.ID and A.UTYPE in(0,9)
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where A.USER_ID=?USER and exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+     union 
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    D.USERID USER_ID1,G.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_PRIVILEGE D on A.USER_ID=D.ROLEID and A.UTYPE=3 and A.DEPT_ID=D.ORGID 
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_USERINFO G on D.USERID=G.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where D.USERID=?ROLE and exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+) order by RDATE desc 
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER" Type="Other"/>
+                 <Parameter Name="ROLE" Type="Other"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="getItemList" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+select * from (
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    A.USER_ID USER_ID1,D.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_USERINFO D on A.USER_ID=D.ID and A.UTYPE in(0,9)
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where A.USER_ID=?USER and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+     union 
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    D.USERID USER_ID1,G.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_PRIVILEGE D on A.USER_ID=D.ROLEID and A.UTYPE=3 and A.DEPT_ID=D.ORGID 
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_USERINFO G on D.USERID=G.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where D.USERID=?ROLE and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+)A
+where (BT like '%?BT%') 
+and (WH like '%?WH%' or ('%?WH%'='%%' and WH IS NULL))
+and (MODULE_NAME like '%?MID%')
+and (RDATE>=to_date('?RDATE 00:00:00','yyyy-MM-dd HH24:mi:ss') and RDATE<=to_date('?RDATE2 23:59:59','yyyy-MM-dd HH24:mi:ss')) 
+order by ?order
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER" Type="Other"/>
+                 <Parameter Name="ROLE" Type="Other"/>
+                 <Parameter Name="BT" Type="Other"/>
+                 <Parameter Name="WH" Type="Other" DefaultValue=""/>
+                 <Parameter Name="MID" Type="Other"/>
+                 <Parameter Name="RDATE" Type="Other"/>
+                 <Parameter Name="RDATE2" Type="Other"/>
+                 <Parameter Name="order" Type="Other" DefaultValue="A.RDATE DESC"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="getItemListCount" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+select count(*) from (
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    A.USER_ID USER_ID1,D.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_USERINFO D on A.USER_ID=D.ID and A.UTYPE in(0,9)
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where A.USER_ID=?USER and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+     union 
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    D.USERID USER_ID1,G.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_PRIVILEGE D on A.USER_ID=D.ROLEID and A.UTYPE=3 and A.DEPT_ID=D.ORGID 
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_USERINFO G on D.USERID=G.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where D.USERID=?ROLE and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+)A
+where (BT like '%?BT%') 
+and (WH like '%?WH%' or ('%?WH%'='%%' and WH IS NULL))
+and (MODULE_NAME like '%?MID%')
+and (RDATE>=to_date('?RDATE 00:00:00','yyyy-MM-dd HH24:mi:ss') and RDATE<=to_date('?RDATE2 23:59:59','yyyy-MM-dd HH24:mi:ss')) 
+order by ?order
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER" Type="Other"/>
+                 <Parameter Name="ROLE" Type="Other"/>
+                 <Parameter Name="BT" Type="Other"/>
+                 <Parameter Name="WH" Type="Other" DefaultValue=""/>
+                 <Parameter Name="MID" Type="Other"/>
+                 <Parameter Name="RDATE" Type="Other"/>
+                 <Parameter Name="RDATE2" Type="Other"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="getEntrustItemsByAUSER_ID" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+SELECT NAME UNAME FROM G_USERINFO WHERE ID IN (SELECT USER_ID FROM G_DBRESET WHERE AUSER_ID=?AUSER_ID AND PERIOD<?NOW AND ROWSTATE>-1)
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="AUSER_ID" Type="Long"/>
+                 <Parameter Name="NOW" Type="Other"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="getDocsItemList" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+select * from (
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    A.USER_ID USER_ID1,D.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_USERINFO D on A.USER_ID=D.ID and A.UTYPE in(0,9)
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where A.USER_ID=?USER and exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+     union 
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    D.USERID USER_ID1,G.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_PRIVILEGE D on A.USER_ID=D.ROLEID and A.UTYPE=3 and A.DEPT_ID=D.ORGID 
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_USERINFO G on D.USERID=G.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where D.USERID=?ROLE and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+)A
+where (BT like '%?BT%') 
+and (MODULE_NAME like '%?MID%')
+and (RDATE>=to_date('?RDATE 00:00:00','yyyy-MM-dd HH24:mi:ss') and RDATE<=to_date('?RDATE2 23:59:59','yyyy-MM-dd HH24:mi:ss')) 
+order by ?order
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER" Type="Other"/>
+                 <Parameter Name="ROLE" Type="Other"/>
+                 <Parameter Name="BT" Type="Other"/>
+                 <Parameter Name="MID" Type="Other"/>
+                 <Parameter Name="RDATE" Type="Other"/>
+                 <Parameter Name="RDATE2" Type="Other"/>
+                 <Parameter Name="order" Type="Other" DefaultValue="A.RDATE DESC"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="getDocsItemListCount" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+select count(*) from (
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    A.USER_ID USER_ID1,D.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_USERINFO D on A.USER_ID=D.ID and A.UTYPE in(0,9)
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where A.USER_ID=?USER and exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+     union 
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    D.USERID USER_ID1,G.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_PRIVILEGE D on A.USER_ID=D.ROLEID and A.UTYPE=3 and A.DEPT_ID=D.ORGID 
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_USERINFO G on D.USERID=G.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    where D.USERID=?ROLE and exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+)A
+where (BT like '%?BT%') 
+and (MODULE_NAME like '%?MID%')
+and (RDATE>=to_date('?RDATE 00:00:00','yyyy-MM-dd HH24:mi:ss') and RDATE<=to_date('?RDATE2 23:59:59','yyyy-MM-dd HH24:mi:ss')) 
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER" Type="Other"/>
+                 <Parameter Name="ROLE" Type="Other"/>
+                 <Parameter Name="BT" Type="Other"/>
+                 <Parameter Name="MID" Type="Other"/>
+                 <Parameter Name="RDATE" Type="Other"/>
+                 <Parameter Name="RDATE2" Type="Other"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="getEntrustItemsByUSER_ID" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+SELECT NAME UNAME FROM G_USERINFO WHERE ID IN (SELECT AUSER_ID FROM G_DBRESET WHERE USER_ID=?USER_ID AND PERIOD<?NOW AND ROWSTATE>-1)
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER_ID" Type="Long"/>
+                 <Parameter Name="NOW" Type="Other"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="batchEndList" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+select * from (
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    A.USER_ID USER_ID1,D.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_USERINFO D on A.USER_ID=D.ID and A.UTYPE in(0,9)
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    inner join WFLINELIST L on L.WF_ID=N.WF_ID and L.WFHEADVERTER=N.WFNODE_ID 
+    inner join WFNODELIST T on T.WF_ID=N.WF_ID and T.WFNODE_ID=L.WFTAILVERTER and T.WFNODE_NODETYPE=0
+    where (A.USER_ID=?USER or 11=?USER) and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+     union 
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    D.USERID USER_ID1,G.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_PRIVILEGE D on A.USER_ID=D.ROLEID and A.UTYPE=3 and A.DEPT_ID=D.ORGID 
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_USERINFO G on D.USERID=G.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    inner join WFLINELIST L on L.WF_ID=N.WF_ID and L.WFHEADVERTER=N.WFNODE_ID 
+    inner join WFNODELIST T on T.WF_ID=N.WF_ID and T.WFNODE_ID=L.WFTAILVERTER and T.WFNODE_NODETYPE=0
+    where D.USERID=?ROLE and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+)A
+where (BT like '%?BT%') 
+and (MODULE_NAME like '%?MID%')
+and (RDATE>=to_date('?RDATE 00:00:00','yyyy-MM-dd HH24:mi:ss') and RDATE<=to_date('?RDATE2 23:59:59','yyyy-MM-dd HH24:mi:ss')) 
+order by ?order
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER" Type="Other"/>
+                 <Parameter Name="ROLE" Type="Other"/>
+                 <Parameter Name="BT" Type="Other"/>
+                 <Parameter Name="MID" Type="Other"/>
+                 <Parameter Name="RDATE" Type="Other"/>
+                 <Parameter Name="RDATE2" Type="Other"/>
+                 <Parameter Name="order" Type="Other" DefaultValue="A.RDATE DESC"/>
+            </ParameterCollection>
+        </SQL>
+        <SQL ID="batchEndListCount" CommandType="XQL">
+            <CommandText>
+                <![CDATA[
+select count(*) from (
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    A.USER_ID USER_ID1,D.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_USERINFO D on A.USER_ID=D.ID and A.UTYPE in(0,9)
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    inner join WFLINELIST L on L.WF_ID=N.WF_ID and L.WFHEADVERTER=N.WFNODE_ID 
+    inner join WFNODELIST T on T.WF_ID=N.WF_ID and T.WFNODE_ID=L.WFTAILVERTER and T.WFNODE_NODETYPE=0
+    where (A.USER_ID=?USER or 11=?USER) and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+     union 
+    select A.ID,A.PID,A.PNID,A.INFO_ID,A.DEPT_ID,A.USER_ID,A.UTYPE,A.STATUS,
+    D.USERID USER_ID1,G.NAME CUSERNAME,A.FUSER_ID FUID,E.NAME FUSERNAME,P.MUSER_ID,P.UNAME AUSERNAME,B.USER_ID U_ID,F.NAME SQUSERNAME,
+    B.BT,B.WH,B.MODULE_ID,B.XFORM_ID,B.OBJCLASS,A.ACTNAME,A.RDATE,A.RDATE OPER_DATE,B.URGENT,B.BLQX,N.SENDTYPE,
+    case when C.ICON is null or C.ICON='' then 'images/icon/defaultobj.gif' else C.ICON end MODULE_ICON,
+    case when B.SUBJECT is null or B.SUBJECT='' then C.NAME else B.SUBJECT end MODULE_NAME,
+    case when N.BACKREASON is null then 0 else 1 end as BACK
+    from G_INBOX A 
+    inner join G_INFOS B on A.INFO_ID=B.ID 
+    inner join G_MODULE C on B.MODULE_ID=C.ID 
+    inner join G_PRIVILEGE D on A.USER_ID=D.ROLEID and A.UTYPE=3 and A.DEPT_ID=D.ORGID 
+    inner join G_USERINFO E on A.FUSER_ID=E.ID 
+    inner join G_USERINFO F on B.USER_ID=F.ID 
+    inner join G_USERINFO G on D.USERID=G.ID 
+    inner join G_PNODES N on N.PID=A.PID and N.ID=A.PNID
+    inner join G_PNODES P on P.PID=A.PID and P.ID=N.FID
+    inner join WFLINELIST L on L.WF_ID=N.WF_ID and L.WFHEADVERTER=N.WFNODE_ID 
+    inner join WFNODELIST T on T.WF_ID=N.WF_ID and T.WFNODE_ID=L.WFTAILVERTER and T.WFNODE_NODETYPE=0
+    where D.USERID=?ROLE and not exists (select * from JS_SIMPLE_FW where B.ID=JS_SIMPLE_FW.INFO_ID) and B.ROWSTATE>=0
+)A
+where (BT like '%?BT%') 
+and (MODULE_NAME like '%?MID%')
+and (RDATE>=to_date('?RDATE 00:00:00','yyyy-MM-dd HH24:mi:ss') and RDATE<=to_date('?RDATE2 23:59:59','yyyy-MM-dd HH24:mi:ss')) 
+                ]]>
+            </CommandText>
+            <ParameterCollection>
+                 <Parameter Name="USER" Type="Other"/>
+                 <Parameter Name="ROLE" Type="Other"/>
+                 <Parameter Name="BT" Type="Other"/>
+                 <Parameter Name="MID" Type="Other"/>
+                 <Parameter Name="RDATE" Type="Other"/>
+                 <Parameter Name="RDATE2" Type="Other"/>
+            </ParameterCollection>
+        </SQL>
+    </SelectCommands>
+</DataSource>

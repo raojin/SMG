@@ -1,0 +1,340 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DataSource>
+	<SelectCommands>
+		<SQL ID="getRoles">
+			<CommandText>
+				<![CDATA[ 
+select ID ROLEID,NAME ROLENAME from G_ROLE where ROWSTATE >=0
+                ]]>
+			</CommandText>
+		</SQL>
+		<SQL ID="getDeptRoot">
+			<CommandText>
+				<![CDATA[ 
+select ID,NAME UNAME from G_ORGANIZE where ID=32
+                ]]>
+			</CommandText>
+		</SQL>
+		<SQL ID="getDepts" CommandType='XQL'>
+			<CommandText>
+				<![CDATA[ 
+select A.ID,2 UTYPE,A.NAME UNAME,1 DEPT,B.ID USER_ID 
+from G_ORGANIZE A inner join G_ORGANIZE B on A.STEP like concat(B.STEP,'___') 
+where A.ROWSTATE >= 0
+union all
+SELECT G_UserGroup.id,2 UTYPE,G_UserGroup.Name UNAME,1 DEPT,32 USER_ID FROM G_UserGroup INNER JOIN G_Organize ON G_Organize.ID = G_UserGroup.OrganizeID where G_UserGroup.ROWSTATE >= 0
+                ]]>
+			</CommandText>
+		</SQL>
+		<SQL ID="getSubDepts" CommandType='XQL'>
+			<CommandText>
+				<![CDATA[ 
+select 2 UTYPE,NULL DEPT_PROPERTY,A.ID,A.NAME UNAME,1 DEPT 
+from G_ORGANIZE A inner join G_ORGANIZE B on A.STEP like concat(B.STEP,'___') 
+where A.ROWSTATE >= 0 and B.ID=?PID
+order by A.ITEMINDEX
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="PID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getGPnodes" CommandType="XQL">
+			<CommandText>
+				<![CDATA[ 
+select A.*,B.NAME UNAME,C.CONTENT from(
+	select A.WF_ID,A.WFNODE_ID,A.STATUS,case when A.MUSER_ID is null then A.USER_ID else A.MUSER_ID end MUSER_ID,A.ACTNAME,A.PID,A.ID,A.PDATE-A.EDATE AS OUTTIME1,SYSDATE-A.EDATE AS OUTTIME2,RDATE AS CRDATE,PDATE AS CPDATE 
+	from G_PNODES A inner join WFNODELIST B on A.WF_ID=B.WF_ID and A.WFNODE_ID=B.WFNODE_ID 
+	where A.WF_ID=?WF_ID and A.WFNODE_WAIT=0 and A.INFO_ID=?INFO_ID 
+)A left join G_USERINFO B on A.MUSER_ID=B.ID left join G_OPINION C on C.PNID=A.ID and C.PID=A.PID 
+order by A.WFNODE_ID,A.STATUS,A.ID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="WF_ID" Type="Other" />
+				<Parameter Name="INFO_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getUserDeptGroupInfo" CommandType='XQL'>
+			<CommandText>
+				<![CDATA[ 
+				select * from (
+select A.ID,A.NAME UNAME,0 UTYPE,A.LOGNAME,A.MOBILE TEL,A.MAIL EMAIL,C.ID DEPT_ID,C.NAME DETP_NAME,
+	2 DEPT_UTYPE,
+	case when C.ID=32 then 1 else NULL end ISOUTER,
+	case when C.ID=32 then C.NAME else NULL end MAINUNION,
+	B.ITEMINDEX,A.MJ
+from G_USERINFO A inner join G_ORGUSER B on A.ID=B.USERINFOID inner join G_ORGANIZE C on C.ID=B.ORGANIZEID 
+where A.ROWSTATE>=0 and C.ROWSTATE>=0
+UNION
+select A.ID,A.NAME UNAME,2 UTYPE,NULL LOGNAME,NULL TEL,NULL EMAIL,B.ID DEPT_ID,B.NAME DETP_NAME,
+	case when A.ID=32 then NULL else 2 end DEPT_UTYPE,
+	(CASE WHEN A.ID=32 THEN 1 ELSE A.TYPE END) -1 ISOUTER,
+	NULL MAINUNION,
+	A.ITEMINDEX,NULL MJ
+from G_ORGANIZE A left join G_ORGANIZE B on A.STEP like concat(B.STEP,'___') 
+where A.ROWSTATE >=0
+UNION
+select a.ID,a.Name UNAME,2 UTYPE,NULL LOGNAME,NULL TEL,NULL EMAIL,b.ID DEPT_ID,b.NAME DETP_NAME,
+	case when b.ID=32 then NULL else 2 end DEPT_UTYPE,
+	(CASE WHEN b.ID=32 THEN 1 ELSE b.TYPE END) -1 ISOUTER,
+	NULL MAINUNION,
+	b.ITEMINDEX,NULL MJ
+from G_UserGroup a
+INNER JOIN G_Organize b ON b.ID =  a.OrganizeID
+UNION
+select c.ID,c.Name UNAME ,0 UTYPE,c.LOGNAME,c.MOBILE TEL,c.MAIL EMAIL,b.ID DEPT_ID,b.NAME DETP_NAME,
+	2 DEPT_UTYPE,
+	case when d.ID=32 then 1 else NULL end ISOUTER,
+	case when d.ID=32 then d.NAME else NULL end MAINUNION,
+	d.ITEMINDEX,c.MJ
+from g_usergroupuser a
+inner join G_UserGroup b on a.UserGroupID=b.ID
+inner join g_userinfo c on a.UserID=c.ID
+INNER JOIN G_Organize d ON d.ID =  b.OrganizeID
+) t order by ITEMINDEX
+                ]]>
+			</CommandText>
+		</SQL>
+		<SQL ID="getUserName">
+			<CommandText>
+				<![CDATA[ 
+select NAME UNAME from G_USERINFO where ID=?USER_ID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="USER_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getDeptID">
+			<CommandText>
+				<![CDATA[ 
+select C.ID
+from G_USERINFO A inner join G_ORGUSER B on A.ID=B.USERINFOID inner join G_ORGANIZE C on C.ID=B.ORGANIZEID 
+where A.ROWSTATE>=0 and C.ROWSTATE>=0 and A.ID=?USER_ID
+union all
+select G_UserGroup.id from G_UserGroup  INNER JOIN G_Organize ON G_Organize.ID = G_UserGroup.OrganizeID 
+inner join G_UserGroupUser on G_UserGroup.ID=G_UserGroupUser.UserGroupID where G_UserGroup.ROWSTATE >= 0 and G_UserGroupUser.UserID=?USER_ID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="USER_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getUsersMainDeptID">
+			<CommandText>
+				<![CDATA[ 
+select o.userinfoid as USER_ID,o.organizeid as DEPT_ID From g_userinfo u,G_ORGuser o where o.userinfoid=u.id and o.ismaindept=1 and u.id in (?IDs)
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="IDs" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getRoleUser">
+			<CommandText>
+				<![CDATA[ 
+select B.USERID USER_ID,C.NAME UNAME
+from G_PNODES A,G_PRIVILEGE B,G_USERINFO C
+where A.UTYPE=3 and A.USER_ID=B.ROLEID and B.USERID=C.ID and A.PID=?PID and A.ID=?PNID and C.ID=?USER_ID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="PID" Type="Other" />
+				<Parameter Name="PNID" Type="Other" />
+				<Parameter Name="USER_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getOnlyOneUserID">
+			<CommandText>
+				<![CDATA[ 
+select A.ID,A.FID,A.WFNODE_ID,A.USER_ID,A.MUSER_ID,0 UTYPE,B.NAME USERNAME,A.UNAME MUSERNAME,DEPT_ID,MDEPT_ID 
+from G_PNODES A,G_USERINFO B 
+where A.PID=?PID AND A.USER_ID=B.ID 
+order by ID desc
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="PID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getDeptBySql">
+			<CommandText>
+				<![CDATA[ 
+select ID DEPT_ID,NAME DEPT_NAME from G_ORGANIZE where ID in(?IDs)  
+union all
+select id DEPT_ID,name DEPT_NAME from G_UserGroup where id in(?IDs)
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="IDs" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getMainDept">
+			<CommandText>
+				<![CDATA[ 
+select A.USER_ID,A.MAINDEPT 
+from G_INFOS A,G_USERINFO B 
+where A.USER_ID=B.ID and B.ROWSTATE>-1 and A.ID=?INFO_ID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="INFO_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getRoleUsers">
+			<CommandText>
+				<![CDATA[ 
+select A.ID GRP_ID,C.ID USER_ID,C.NAME USER_NAME,0 USER_UTYPE,D.ORGANIZEID DEPT_ID,E.NAME DEPT_NAME, NULL MAINUNION
+from G_ROLE A 
+	inner join G_PRIVILEGE B on A.ID=B.ROLEID
+	inner join G_USERINFO C on C.ID=B.USERID
+	inner join G_ORGUSER D on C.ID=D.USERINFOID
+	left join G_ORGANIZE E on E.ID=D.ORGANIZEID 
+where (1=1 OR (A.ID in(?ROLE_IDS)))
+union all
+select  D1.RoleID GRP_ID,E1.ID USER_ID,E1.name USER_NAME,0 USER_UTYPE,A1.ID DEPT_ID,A1.NAME DEPT_NAME, NULL MAINUNION from G_UserGroup A1  
+INNER JOIN G_Organize B1 ON B1.ID =  A1.OrganizeID 
+inner join G_UserGroupUser C1 on  A1.ID=C1.UserGroupID 
+inner join G_PRIVILEGE D1 on D1.UserID=C1.UserID
+inner join g_userinfo E1 on  E1.ID=C1.UserID
+ where  A1.ROWSTATE >= 0
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="ROLE_IDS" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getRoleDeptUsers">
+			<CommandText>
+				<![CDATA[ 
+select A.ID GRP_ID,C.ID USER_ID,C.NAME USER_NAME,0 USER_UTYPE,D.ORGANIZEID DEPT_ID,E.NAME DEPT_NAME, NULL MAINUNION
+from G_ROLE A 
+	inner join G_PRIVILEGE B on A.ID=B.ROLEID
+	inner join G_USERINFO C on C.ID=B.USERID
+	inner join G_ORGUSER D on C.ID=D.USERINFOID and B.ORGID=D.ORGANIZEID
+	left join G_ORGANIZE E on E.ID=D.ORGANIZEID 
+where (1=1 OR (A.ID in(?ROLE_IDS)))
+order by GRP_ID,USER_ID
+union all
+select  D1.RoleID GRP_ID,E1.ID USER_ID,E1.name USER_NAME,0 USER_UTYPE,A1.ID DEPT_ID,A1.NAME DEPT_NAME, NULL MAINUNION from G_UserGroup A1  
+INNER JOIN G_Organize B1 ON B1.ID =  A1.OrganizeID 
+inner join G_UserGroupUser C1 on  A1.ID=C1.UserGroupID 
+inner join G_PRIVILEGE D1 on D1.UserID=C1.UserID
+inner join g_userinfo E1 on  E1.ID=C1.UserID
+ where  A1.ROWSTATE >= 0
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="ROLE_IDS" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getRemindUserInfo">
+			<CommandText>
+				<![CDATA[ 
+SELECT LOGNAME,MOBILE MOBILE_EMAIL,MAIL EMAIL FROM G_USERINFO WHERE ID=?USER_ID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="USER_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getUnameDname">
+			<CommandText>
+				<![CDATA[ 
+select A.NAME,C.NAME as DEPTNAME 
+from G_USERINFO A
+	left join G_ORGUSER B on A.ID=B.USERINFOID
+	left join G_ORGANIZE C on C.ID=B.ORGANIZEID 
+WHERE A.ID=?USER_ID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="USER_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getFormStatus">
+			<CommandText>
+				<![CDATA[ 
+select A.ID,A.FID,A.UNAME,'' DNAME,C.WFNODE_CAPTION ACTNAME,A.STATUS,A.RDATE,A.PDATE,A.WAITCOUNT,A.USER_ID,A.MUSER_ID,A.ATYPE,A.WFLINE_TYPE  
+from G_PNODES A,WFNODELIST C,G_USERINFO B 
+where A.USER_ID=B.ID and A.WF_ID=?WF_ID and A.INFO_ID=?INFO_ID and A.WF_ID=C.WF_ID and A.WFNODE_ID=C.WFNODE_ID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="WF_ID" Type="Other" />
+				<Parameter Name="INFO_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="ViewFlow1">
+			<CommandText>
+				<![CDATA[ 
+select S.PID,S.ID PNID,S.MUSER_ID,S.USER_ID,R.MUSER_ID MUSER_ID1,R.USER_ID USER_ID1,
+U.NAME DBR,R.ACTNAME,R.STATUS,R.ATYPE,R.QSRQ PDATE,O.CONTENT,
+case when R.SENDTYPE=3 then U1.NAME else S.UNAME end FSR,
+case when R.SENDTYPE=3 then R.RDATE else S.SDATE end SDATE,R.UNAME JSR 
+from G_PNODES S 
+	inner join G_PNODES R on R.FID=S.ID and R.PID=S.PID 
+	left join G_USERINFO U on S.USER_ID=U.ID 
+	left join G_USERINFO U1 on R.WHOHANDLE=U1.ID 
+	left join G_ORGANIZE B on R.DEPT_ID=B.ID 
+	left join G_ORGUSER C on R.USER_ID=C.USERINFOID and R.DEPT_ID=C.ORGANIZEID 
+	left join G_OPINION O on O.PID=S.PID and O.PNID=S.ID
+where S.INFO_ID=?INFO_ID 
+order by S.FID,S.SDATE,B.ITEMINDEX,C.ITEMINDEX
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="INFO_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getGInboxStatus">
+			<CommandText>
+				<![CDATA[ 
+select STATUS ED1 from G_INBOX where INFO_ID=?INFO_ID AND PNID=?PNID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="INFO_ID" Type="Other" />
+				<Parameter Name="PNID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		<SQL ID="getSenderDeptID">
+			<CommandText>
+				<![CDATA[ 
+select ou.ORGANIZEID MAIN_DEPT_ID,n.*,i.MODULE_ID,d.USER_ID USER_ID1,d.ORG_ID DEPT_ID1,d.AUSER_ID,d.AORG_ID ADEPT_ID,d.MODULEID MODULE_ID1 from 
+(select ?USER_ID MUSER_ID,INFO_ID,PID,ID,USER_ID,DEPT_ID from g_pnodes where PID=?PID and ID=?PNID)n
+left join G_INFOS i on n.INFO_ID=i.ID 
+left join G_DBRESET d on n.USER_ID=d.USER_ID and n.DEPT_ID=d.ORG_ID and d.ROWSTATE>-1 and (d.MODULEID=0 or d.MODULEID=i.MODULE_ID) and d.AUSER_ID=n.MUSER_ID 
+left join G_USERINFO u on n.MUSER_ID=u.ID 
+left join G_ORGUSER ou on ou.USERINFOID=u.ID and ou.ISMAINDEPT=1
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="USER_ID" Type="Other" />
+				<Parameter Name="PID" Type="Other" />
+				<Parameter Name="PNID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		
+		<!-- 获取当前流程节点信息 主要是流程查看情况有问题 taolb 2012.8.28 add -->
+		<SQL ID="getCurrentNodeUserInfo">
+			<CommandText>
+				<![CDATA[ 
+					SELECT 
+						A.*,C.NAME ORGNAME,D.NAME POSTNAME 
+					FROM 
+						     (SELECT A.ID,A.NAME AS UNAME, A.MOBILE AS TEL FROM G_USERINFO A,G_INBOX B WHERE A.ID=B.USER_ID AND B.INFO_ID= ?INFO_ID ) A 
+						left join G_ORGUSER B on A.ID=B.USERINFOID 
+						left join G_ORGANIZE C on B.ORGANIZEID=C.ID 
+						left JOIN G_ORGANIZEPOST D ON D.ORGANIZEID=C.ID 
+						left JOIN G_USERORGANIZEPOST E ON E.USERID=A.ID
+                ]]>
+			</CommandText>
+			<ParameterCollection>
+				<Parameter Name="INFO_ID" Type="Other" />
+			</ParameterCollection>
+		</SQL>
+		
+	</SelectCommands>
+</DataSource>

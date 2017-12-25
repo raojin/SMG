@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Dsoa" basedir="." default="war">
+	<!--The libs contains the emma.jar and emma_ant.jar-->
+	<property name="lib.dir" value="WebContent/WEB-INF/lib" />
+
+	<!--main source location-->
+	<property name="src.main.dir" location="src" />
+
+	<!--main bin location-->
+	<property name="bin.main.dir" location="srcbin" />
+
+	<!--This is where we place our instrumented classes-->
+	<property name="bin.instrument.dir" location="instrbin" />
+
+	<!--coverage metadata and report location-->
+	<property name="coverage.dir" location="coverage" />
+
+
+
+	<!-- dist dir -->
+	<property name="dist.dir" location="target" />
+
+	<property name="webapp.name" value="Dsoa" />
+
+
+	<!--Instrument classes in this path-->
+	<path id="classpath.main">
+		<pathelement location="${bin.main.dir}" />
+	</path>
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+	</path>
+
+
+	<!--Clean srcbin, instrumented bin,junit report, coverage report-->
+	<target name="clean">
+		<delete dir="${bin.instrument.dir}" />
+		<delete dir="${coverage.dir}" />
+		<delete dir="${bin.main.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<!--create srcbin, instrumented bin,junit report, coverage report-->
+	<target name="init" depends="clean">
+		<mkdir dir="${bin.instrument.dir}" />
+		<mkdir dir="${coverage.dir}" />
+		<mkdir dir="${bin.main.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<!-- compile src main -->
+	<target name="compile.src.main" depends="init">
+		<javac destdir="${bin.main.dir}" includeantruntime="on" classpathref="classpath" debug="on">
+			<src path="${src.main.dir}" />
+			<compilerarg line="-encoding UTF-8" />
+		</javac>
+		<copy todir="${bin.main.dir}">
+			<fileset dir="WebContent/WEB-INF">
+				<include name="*.xml" />
+				<include name="*.tld" />
+			</fileset>
+			<fileset dir="${src.main.dir}">
+				<include name="**/*.xml" />
+				<include name="**/*.vm" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+	<!--Instrument the  src main bin, place the instrumented class in bin.instrument.dir-->
+	<!--metadata file will be placed in coverage.dir-->
+	<target name="instrument" depends="compile.src.main">
+		<copy todir="${bin.instrument.dir}">
+			<fileset dir="WebContent/WEB-INF">
+				<include name="*.xml" />
+				<include name="*.tld" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- create war file -->
+	<target name="war" depends="instrument">
+		<echo message="begin war..." />
+		<war destfile="${dist.dir}/${webapp.name}.war" webxml="WebContent/WEB-INF/web.xml">
+			<lib dir="${lib.dir}" />
+			<classes dir="${bin.main.dir}" />
+			<fileset dir="WebContent" defaultexcludes="no">
+				<exclude name="**/WEB-INF/lib/**" />
+				<exclude name="**/WEB-INF/classes/**" />
+			</fileset>
+		</war>
+		<echo message="end war..." />
+	</target>
+
+
+</project>

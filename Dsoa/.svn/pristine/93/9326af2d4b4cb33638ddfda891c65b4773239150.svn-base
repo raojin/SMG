@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	</head>
+	<body style="border: 0px solid #00ff00; margin: 0px;padding-top:10px;">
+		<div align="center">
+			<table cellSpacing="0" cellPadding="0" border="0" ID="Table1"
+				style="width: 100%;">
+				<tr>
+					<td valign="middle" align="center">
+						<table height="70" cellSpacing="2" cellPadding="0" width="80%"
+							border="0" ID="Table2" bgColor="#ff9900">
+							<tr>
+								<td align="center" bgColor="#eeeeee">
+									<font face="宋体" size="2">正在获取后续节点, 请稍候...</font>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang=en xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>出错啦！</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+
+
+<META name=robots content=noindex,nofollow>
+<STYLE>
+BODY {
+	TEXT-ALIGN: center;
+	PADDING-BOTTOM: 20px;
+	MARGIN: 0px;
+	PADDING-LEFT: 20px;
+	PADDING-RIGHT: 20px;
+	FONT-FAMILY: Arial, Helvetica, sans-serif;
+	BACKGROUND: #f9fee8;
+	COLOR: #666666;
+	FONT-SIZE: 14px;
+	PADDING-TOP: 20px
+}
+
+.error_page {
+	PADDING-BOTTOM: 50px;
+	MARGIN: auto;
+	PADDING-LEFT: 50px;
+	WIDTH: 600px;
+	PADDING-RIGHT: 50px;
+	PADDING-TOP: 50px
+}
+
+.error_page H1 {
+	MARGIN: 20px 0px 0px
+}
+
+.error_page P {
+	PADDING-BOTTOM: 0px;
+	MARGIN: 10px 0px;
+	PADDING-LEFT: 0px;
+	PADDING-RIGHT: 0px;
+	PADDING-TOP: 0px
+}
+
+A {
+	COLOR: #9caa6d;
+	TEXT-DECORATION: none
+}
+
+A:hover {
+	COLOR: #9caa6d;
+	TEXT-DECORATION: underline
+}
+</STYLE>
+
+<META name=GENERATOR content="MSHTML 8.00.6001.19400">
+</HEAD>
+<BODY class=login>
+	<DIV class=error_page>
+		<IMG alt=Kidmondo_face_sad
+			src="images/kidmondo_face_sad.gif">
+
+		<H1>出错啦！</H1>
+		<P></P>
+	</DIV>
+</BODY>
+</HTML>

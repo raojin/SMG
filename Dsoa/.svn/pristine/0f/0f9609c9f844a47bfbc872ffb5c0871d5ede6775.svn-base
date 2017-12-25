@@ -1,0 +1,23 @@
+TD { FONT-SIZE: 12px; FONT-FAMILY: "宋体" }
+BODY { SCROLLBAR-FACE-COLOR: #999999; SCROLLBAR-HIGHLIGHT-COLOR: #ffffff; SCROLLBAR-SHADOW-COLOR: #999999;  SCROLLBAR-ARROW-COLOR: yellow; SCROLLBAR-TRACK-COLOR: #ffffff; SCROLLBAR-DARKSHADOW-COLOR: #ffffff; SCROLLBAR-BASE-COLOR: #ffffff }
+A:link { COLOR: darkblue;TEXT-DECORATION: none}
+A:visited { TEXT-DECORATION: none }
+A:hover { COLOR: black; TEXT-DECORATION: underline }
+.blue:link { COLOR: #1a468b; TEXT-DECORATION: none }
+.blue:visited { COLOR: #1a468b; TEXT-DECORATION: none }
+.blue:hover { COLOR: #ffffff; TEXT-DECORATION: underline }
+.white:link { COLOR: #ffffff; TEXT-DECORATION: none }
+.white:visited { COLOR: #ffffff; TEXT-DECORATION: none }
+.white:hover { COLOR: #f3f3f3; TEXT-DECORATION: underline }
+.gray:link { COLOR: #68696a; TEXT-DECORATION: none }
+.gray:visited { COLOR: #68696a; TEXT-DECORATION: none }
+.gray:hover { COLOR: #0066ff; TEXT-DECORATION: underline }
+.input_blue_text { BORDER-RIGHT: #4cabef 1px solid; BORDER-TOP: #4cabef 1px solid; FONT-SIZE: 12px; BACKGROUND: #d1e1fb; BORDER-LEFT: #4cabef 1px solid; COLOR: #000000; BORDER-BOTTOM: #4cabef 1px solid }
+.input_blue_button { BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; FONT-SIZE: 12px; BACKGROUND: #a4d4ff; BORDER-BOTTOM-WIDTH: 1px; COLOR: #000000; BORDER-RIGHT-WIDTH: 1px }
+.input_white_text { BORDER-RIGHT: #000000 1px solid; BORDER-TOP: #000000 1px solid; FONT-SIZE: 12px; BACKGROUND: #ffffff; BORDER-LEFT: #000000 1px solid; COLOR: #000000; BORDER-BOTTOM: #000000 1px solid }
+INPUT { FONT-SIZE: 12px; FONT-FAMILY: Arial; HEIGHT: 20px }
+.text_12px { FONT-SIZE: 12px; COLOR: #000000; FONT-FAMILY: "宋体", "arial" }
+.text_14px { FONT-SIZE: 14px; COLOR: #000000; FONT-FAMILY: "宋体", "arial" }
+.title_14px { FONT-WEIGHT: normal; FONT-SIZE: 14px; FONT-FAMILY: "宋体", "arial" }
+.form { FONT-WEIGHT: normal; FONT-SIZE: 9pt; COLOR: maroon; DIRECTION: ltr; FONT-FAMILY: 新宋体; BACKGROUND-COLOR: #ffffff; TEXT-ALIGN: right }
+.border { BORDER-RIGHT: #840000 1px solid; BORDER-TOP: #840000 1px solid; BORDER-LEFT: #840000 1px solid; BORDER-BOTTOM: #840000 1px solid; BACKGROUND-COLOR: #fff9f0 }
